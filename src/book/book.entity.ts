@@ -25,4 +25,11 @@ export class Book {
 
     @Column()
     availableCopies: number;
+
+    @Column({ default: 'available' })
+    borrowingStatus: 'available' | 'pending' | 'borrowed';
+    // borrowed is equavilent to approved
+
+    @Column({ type: 'timestamp', nullable: true })
+    borrowedUntil: Date | null;
 }
