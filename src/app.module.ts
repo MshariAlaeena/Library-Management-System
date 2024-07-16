@@ -15,13 +15,8 @@ import { ConfigModule } from '@nestjs/config';
       host: process.env.POSTGRES_HOST,
       port: 5432,
       username: 'postgres',
-<<<<<<< HEAD
       password: process.env.POSTGRES_PASSWORD,
       database: process.env.POSTGRES_DATABASE,
-=======
-      password: '',
-      database: 'library',
->>>>>>> dfd8578b15f1056c499bf4b2ffcdd83d9ce51b27
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
