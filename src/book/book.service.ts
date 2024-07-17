@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './book.entity';
+import { CreateBookDto } from './dtos/create-book.dto';
+import { BorrowRequestDto } from './dtos/borrow-request.dto';
 
 @Injectable()
 export class BookService {
@@ -24,11 +26,19 @@ export class BookService {
         return this.booksRepository.findOneBy({ id });
       }
     
-      create(book: Book): Promise<Book> {
-        return this.booksRepository.save(book);
+      async create(createBookDto: CreateBookDto): Promise<any> {
+        const newBook = this.booksRepository.create(createBookDto);
+        await this.booksRepository.save(newBook);
+
+        return newBook;
       }
     
-      async update(id: number, book: Book): Promise<void> {
+      async update(id: number, book: Partial<Book>): Promise<void> {
+        const existingBook = await this.booksRepository.findOne({ where: { id } });
+
+        if(!existingBook)
+          throw new NotFoundException(`Book with ID ${id} not found`);
+
         await this.booksRepository.update(id, book);
       }
     
@@ -48,14 +58,18 @@ export class BookService {
         if(!book)
           throw new Error('Book not found');
 
-        if(book.borrowingStatus == 'available') {
-          book.borrowedUntil = new Date(new Date().getTime() + (numberOfDays * 24 * 60 * 60 * 1000));
-          book.borrowingStatus = 'pending';
-          await this.booksRepository.save(book);
-          return book.id;
+        if (book.borrowingStatus !== 'available') {
+          throw new BadRequestException(`Book with ID ${id} is unavailable for borrowing`);
         }
-          return book.id;
-      }
+
+        const currentDate = new Date();
+        const returnDate = new Date(currentDate.getTime() + (numberOfDays * 24 * 60 * 60 * 1000));
+        book.borrowedUntil = returnDate;
+        book.borrowingStatus = 'pending';
+
+        await this.booksRepository.save(book);
+        return book.id;
+    }
 
       async returnBook(id: number) {
         const book = await this.booksRepository.findOne({ where: { id }});
@@ -69,21 +83,25 @@ export class BookService {
 
       async approveBorrowing(id: number): Promise<Book> {
         const book = await this.booksRepository.findOne({ where: { id }});
-        if(book.borrowingStatus == 'pending') {
-          book.borrowingStatus = 'borrowed';
-          await this.booksRepository.save(book);
-          return book;
+
+        if(book.borrowingStatus !== 'pending') {
+          throw new BadRequestException(`Book with ID ${id} is not being Requested for borrowing`);
         }
+
+        book.borrowingStatus = 'borrowed';
+        await this.booksRepository.save(book);
         return book;
       }
 
       async rejectBorrowing(id: number): Promise<Book> {
         const book = await this.booksRepository.findOne({ where: { id }});
+
         if(book.borrowingStatus == 'pending') {
-          book.borrowingStatus = 'available';
+          throw new BadRequestException(`Book with ID ${id} is not being Requested for borrowing`);
+        }
+            book.borrowingStatus = 'available';
           await this.booksRepository.save(book);
           return book;
-        }
         return book;
       }
 

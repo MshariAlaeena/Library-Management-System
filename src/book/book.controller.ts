@@ -3,7 +3,9 @@ import { RolesGuard } from '../roles/roles.guard';
 import { Roles } from '../roles/roles.decorator'; 
 import { BookService } from './book.service';
 import { Book } from './book.entity';
+import { CreateBookDto } from './dtos/create-book.dto';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
+import { BorrowRequestDto } from './dtos/borrow-request.dto';
 
 
 @Controller('books') 
@@ -31,8 +33,9 @@ export class BookController {
 
   @Post()
   @Roles('admin')
-  create(@Body() book: Book): Promise<Book> {
-    return this.BookService.create(book);
+  async create(@Body() createBookDto: CreateBookDto): Promise<{ id: number, title: string, publishedDate: string }> {
+    const newBook = await this.BookService.create(createBookDto);
+    return { id: newBook.id, title: newBook.title, publishedDate: newBook.publishedDate};
   }
 
   @Put(':id')
@@ -49,8 +52,8 @@ export class BookController {
 
   @Post('borrow/:id')
   @Roles('user')
-  async borrow(@Param('id') id: number, @Body('numberOfDays') numberOfDays: number): Promise<{ requestedId: number}>{
-    const requestedId = await this.BookService.borrowBook(id, numberOfDays);
+  async borrow(@Param('id') id: number, @Body() borrowRequestDto: BorrowRequestDto): Promise<{ requestedId: number}>{
+    const requestedId = await this.BookService.borrowBook(id, borrowRequestDto.numberOfDays);
     return { requestedId };
   }
   
@@ -60,9 +63,9 @@ export class BookController {
     await this.BookService.returnBook(id);
   }
 
-  @Post('approve/:requestId')
+  @Post('approve/:requestedId')
   @Roles('admin')
-  async approveBorrow(@Param('requestId') requestedId: number): Promise<{ requestedId: number}> {
+  async approveBorrow(@Param('requestedId') requestedId: number): Promise<{ requestedId: number}> {
     await this.BookService.approveBorrowing(requestedId);
     return { requestedId };
   }  
