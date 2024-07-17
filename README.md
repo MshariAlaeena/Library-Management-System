@@ -180,14 +180,14 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
     "message": "Book deleted successfully"
   }
   ```
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  - **Borrow a Book**
+
+- **Borrow a Book**
 
   ```http
   POST /borrow/:id
   ```
 
- **Request Body:**
+  **Request Body:**
 
   ```json
   {
@@ -196,7 +196,7 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   }
   ```
 
-  **Response:**
+   **Response:**
 
   ```json
   {
@@ -210,7 +210,7 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   POST /return/:id
   ```
 
-**Request Body:**
+  **Request Body:**
 
   ```json
   {
@@ -224,7 +224,7 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   POST /aprrove/:requestedId
   ```
 
-**Request Body:**
+  **Request Body:**
 
   ```json
   {
@@ -246,7 +246,7 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   POST /reject/:id
   ```
 
-**Request Body:**
+  **Request Body:**
 
   ```json
   {
