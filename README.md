@@ -7,6 +7,7 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
 - [Features](#features)
 - [Installation](#installation)
 - [Running the App](#running-the-app)
+- [Docker Setup](#docker-setup)
 - [API Endpoints](#api-endpoints)
 
 ## Features
@@ -50,9 +51,36 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
    npm run start:dev
    ```
 
-2. **Open your browser**
+2. **Accessing the API**
 
-   Navigate to `http://localhost:3000` to access the application.
+  The API server will start on `http://localhost:3000`. You can use tools like Postman or curl to interact with the API endpoints.
+
+## Docker Setup
+
+1. **Build the Docker images**
+
+   ```bash
+   docker-compose build
+   ```
+
+2. **Start the Docker containers**
+
+   ```bash
+   docker-compose up
+   ```
+
+3. **Stop the Docker containers**
+
+   To stop the containers, run:
+
+   ```bash
+   docker-compose down
+   ```
+
+4. **Environment Variables**
+
+   Make sure to create a `.env` file based on the `.env.example` file before running the containers.
+
 
 ## API Endpoints
 
