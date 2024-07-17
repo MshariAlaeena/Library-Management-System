@@ -180,4 +180,85 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
     "message": "Book deleted successfully"
   }
   ```
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  - **Borrow a Book**
+
+  ```http
+  POST /borrow/:id
+  ```
+
+ **Request Body:**
+
+  ```json
+  {
+    "id": "number",
+    "numberOfDays": "string"
+  }
+  ```
+
+  **Response:**
+
+  ```json
+  {
+    "requestId": "number"
+  }
+  ```
+
+- **Return a Book**
+
+  ```http
+  POST /return/:id
+  ```
+
+**Request Body:**
+
+  ```json
+  {
+    "id": "number",
+  }
+  ```
+  
+- **Approve a Reqeusted Book**
+
+  ```http
+  POST /aprrove/:requestedId
+  ```
+
+**Request Body:**
+
+  ```json
+  {
+    "requestedId": "number",
+  }
+  ```
+
+  **Response:**
+
+  ```json
+  {
+    "requestedId": "number"
+  }
+  ```
+  
+- **Reject a Requested Book**
+
+  ```http
+  POST /reject/:id
+  ```
+
+**Request Body:**
+
+  ```json
+  {
+    "id": "number",
+  }
+  ```
+
+  **Response:**
+
+  ```json
+  {
+    "id": "number"
+  }
+  ```
   
