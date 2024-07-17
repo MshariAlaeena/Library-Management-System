@@ -96,7 +96,6 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
     {
       "id": "string",
       "title": "string",
-      "": "string",
       "publishedDate": "string"
     }
   ]
@@ -114,7 +113,6 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   {
     "id": "string",
     "title": "string",
-    "": "string",
     "publishedDate": "string"
   }
   ```
@@ -130,7 +128,6 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   ```json
   {
     "title": "string",
-    "": "string",
     "publishedDate": "string"
   }
   ```
@@ -141,7 +138,6 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   {
     "id": "string",
     "title": "string",
-    "": "string",
     "publishedDate": "string"
   }
   ```
@@ -157,7 +153,6 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   ```json
   {
     "title": "string",
-    "": "string",
     "publishedDate": "string"
   }
   ```
@@ -168,7 +163,6 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
   {
     "id": "string",
     "title": "string",
-    "": "string",
     "publishedDate": "string"
   }
   ```
