@@ -88,7 +88,7 @@ The API server will start on `http://localhost:3000`. You can use tools like Pos
 - **Sign In**
 
   ```http
-  POST /auth/sign-in
+  POST /auth/signIn
   ```
 
   **Request Body:**
