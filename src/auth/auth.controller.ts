@@ -7,9 +7,15 @@ export class AuthController {
     constructor(private readonly authService: AuthService) {}
 
     @HttpCode(HttpStatus.OK)
-    @Post('auth/login')
+    @Post('auth/signIn')
     async signIn(@Body() signInDto: SignInDto): Promise<{ token: string, expiry: number }> {
         const { token, expiry } = await this.authService.signIn(signInDto.username, signInDto.password);
         return { token, expiry };
+    }
+
+    @Post('auth/signUp')
+    async signUp () {
+        await this.authService.signup();
+        return "user created";
     }
 }

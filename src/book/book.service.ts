@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Book } from './book.entity';
 import { CreateBookDto } from './dtos/create-book.dto';
 import { BorrowRequestDto } from './dtos/borrow-request.dto';
+import { UpdateBookDto } from './dtos/update-book.dto';
 
 @Injectable()
 export class BookService {
@@ -22,35 +23,45 @@ export class BookService {
         });
       }    
       
+
       findOne(id: number): Promise<Book> {
         return this.booksRepository.findOneBy({ id });
       }
     
-      async create(createBookDto: CreateBookDto): Promise<any> {
-        const newBook = this.booksRepository.create(createBookDto);
-        await this.booksRepository.save(newBook);
 
-        return newBook;
+      async create(createBookDto: CreateBookDto): Promise<Book> {
+        const existingBook = await this.booksRepository.findOne({ where: { title: createBookDto.title } });
+
+        if(existingBook)
+          throw new BadRequestException(`Book with Title ${createBookDto.title} Exists!`);
+
+        const newBook = this.booksRepository.create({ ...createBookDto, publishedDate: new Date(createBookDto.publishedDate) });
+        return await this.booksRepository.save(newBook);
+      }
+
+
+      async update(id: number, updateBookDto: UpdateBookDto): Promise<Book> {
+        const existingBook = await this.booksRepository.findOne({ where: { id: updateBookDto.id } });
+        
+        if(!existingBook)
+          throw new NotFoundException(`Book with ID ${updateBookDto.id} not found`);
+
+        Object.assign(existingBook, updateBookDto);
+
+        return this.booksRepository.save(existingBook);
       }
     
-      async update(id: number, book: Partial<Book>): Promise<void> {
-        const existingBook = await this.booksRepository.findOne({ where: { id } });
 
-        if(!existingBook)
+      async remove(id: number): Promise<boolean> {
+        const book = await this.booksRepository.findOne({ where: { id } });
+
+        if(!book)
           throw new NotFoundException(`Book with ID ${id} not found`);
 
-        await this.booksRepository.update(id, book);
+        await this.booksRepository.delete(id);
+        return true;
       }
-    
-      async remove(id: number): Promise<string> {
-       const deletion = await this.booksRepository.delete(id);
-       const isDeleted = deletion.affected > 0;
 
-       if(isDeleted)
-        return "Deleted Successfully";
-      
-      return "an Error occurred";
-      }
 
       async borrowBook(id: number, numberOfDays: number): Promise<number> {
         const book = await this.booksRepository.findOne({ where: { id }});
@@ -71,7 +82,8 @@ export class BookService {
         return book.id;
     }
 
-      async returnBook(id: number) {
+
+      async returnBook(id: number): Promise<void> {
         const book = await this.booksRepository.findOne({ where: { id }});
         if(!book)
           throw new Error('Book not found');
@@ -81,9 +93,13 @@ export class BookService {
         await this.booksRepository.save(book);
       }
 
+
       async approveBorrowing(id: number): Promise<Book> {
         const book = await this.booksRepository.findOne({ where: { id }});
 
+        if(!book) {
+          throw new NotFoundException();
+        }
         if(book.borrowingStatus !== 'pending') {
           throw new BadRequestException(`Book with ID ${id} is not being Requested for borrowing`);
         }
@@ -93,16 +109,20 @@ export class BookService {
         return book;
       }
 
+
       async rejectBorrowing(id: number): Promise<Book> {
         const book = await this.booksRepository.findOne({ where: { id }});
+
+        if(!book) {
+          throw new NotFoundException();
+        }
 
         if(book.borrowingStatus == 'pending') {
           throw new BadRequestException(`Book with ID ${id} is not being Requested for borrowing`);
         }
-            book.borrowingStatus = 'available';
+          book.borrowingStatus = 'available';
           await this.booksRepository.save(book);
           return book;
-        return book;
       }
 
 }

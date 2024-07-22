@@ -2,7 +2,7 @@ import { IsNumber, IsString, IsOptional, IsDateString, isNumber } from 'class-va
 
 export class BorrowRequestDto {
   @IsNumber()
-  bookId: number;
+  id: number;
 
   @IsNumber()
   numberOfDays: number; 
