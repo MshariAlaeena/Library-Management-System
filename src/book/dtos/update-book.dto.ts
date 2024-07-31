@@ -1,4 +1,10 @@
-import { IsString, IsDateString, IsNumber, IsOptional, IsDate } from 'class-validator';
+import {
+  IsString,
+  IsDateString,
+  IsNumber,
+  IsOptional,
+  IsDate,
+} from 'class-validator';
 
 export class UpdateBookDto {
   @IsNumber()
