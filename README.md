@@ -314,7 +314,7 @@ The API server will start on `http://localhost:3000`. You can use tools like Pos
   }
   ```
 
-- **get all Notifications**
+- **Get All Notifications**
 
   ```http
   GET /notifications/
