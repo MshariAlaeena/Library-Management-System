@@ -323,12 +323,11 @@ The API server will start on `http://localhost:3000`. You can use tools like Pos
 
   ```json
   {
-    "id": number,
-    "userId": number,
+    "id": "number",
+    "userId": "number",
     "category": "string",
     "content": "string",
-    "isRead": boolean,
+    "isRead": "boolean",
     "createdAt": "string"
   }
-  ...
   ```
