@@ -288,3 +288,47 @@ The API server will start on `http://localhost:3000`. You can use tools like Pos
     "id": "number"
   }
   ```
+
+- **Create a Notification**
+
+  ```http
+  POST /notifications/
+  ```
+
+  **Request Body:**
+
+  ```json
+  {
+   "userId": "number",
+   "category": "string",
+   "content": "string",
+  }
+  ```
+
+  **Response:**
+
+  ```json
+  {
+    "empty (currently)"
+  }
+  ```
+
+- **get all Notifications**
+
+  ```http
+  GET /notifications/
+  ```
+
+  **Response:**
+
+  ```json
+  {
+    "id": number,
+    "userId": number,
+    "category": "string",
+    "content": "string",
+    "isRead": boolean,
+    "createdAt": "string"
+  }
+  ...
+  ```
