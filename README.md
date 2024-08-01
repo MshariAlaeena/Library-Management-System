@@ -14,6 +14,7 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
 
 - User Authentication (Sign In)
 - Book Management (CRUD operations)
+- Notifications for users
 - Modular and scalable architecture
 
 ## Installation
