@@ -1,42 +1,73 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { CreateNotificationDto } from './dto/create-notification.dto';
 import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { Notification } from './notification.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserService } from 'src/user/user.service';
+import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class NotificationsService {
   constructor(
     @InjectRepository(Notification)
     private notificationsRepository: Repository<Notification>,
-    private userService: UserService
+    private userService: UserService,
   ) {}
 
+  async createNotification(
+    createNotificationDto: CreateNotificationDto,
+  ): Promise<Notification> {
+    try {
+      const Notification = await this.notificationsRepository.findOne({
+        where: { content: createNotificationDto.content, category: createNotificationDto.category },
+      });
 
-  async createNotification(createNotificationDto: CreateNotificationDto): Promise<Notification> {
-    const Notification = await this.notificationsRepository.findOne({ where: { id: createNotificationDto.id }});
+      if (Notification) {
+        throw new BadRequestException(
+          `Notification with ID ${Notification.id} Exists!`,
+        );
+      }
 
-    if (Notification) {
-      throw new BadRequestException(`Notification with ID ${createNotificationDto.id} Exists!`);
+      const newNotification = this.notificationsRepository.create(
+        createNotificationDto,
+      );
+      this.notificationsRepository.save(newNotification);
+      return newNotification;
+    } catch (error) {
+      if (error instanceof BadRequestException)
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      else
+        throw new HttpException(
+          `Unexpected Error while creating Notification`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
     }
-
-    const newNotification = this.notificationsRepository.create(createNotificationDto);
-    return newNotification;
-
   }
-  
-  async getNotifications(userId: number): Promise<Notification[]> {
+
+  async getAllNotifications(): Promise<Notification[]> {
+    return await this.notificationsRepository.find();
+  }
+
+  async getUserNotifications(userId: number): Promise<Notification[]> {
     return await this.notificationsRepository.find({ where: { userId } });
   }
 
   async markAsRead(id: number): Promise<Notification> {
     try {
-      const notification = await this.notificationsRepository.findOne({ where: { id }});
+      const notification = await this.notificationsRepository.findOne({
+        where: { id },
+      });
 
-      if(!notification)
-        throw new BadRequestException(`Notification with ID ${id} doesn't exist!`);
+      if (!notification)
+        throw new BadRequestException(
+          `Notification with ID ${id} doesn't exist!`,
+        );
 
       notification.isRead = true;
       return await this.notificationsRepository.save(notification);
@@ -44,12 +75,35 @@ export class NotificationsService {
       if (error instanceof BadRequestException) {
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
       } else {
-
       }
     }
   }
 
-  
+  async deleteNotifications(id: number): Promise<Notification> {
+    try {
+      const Notification = await this.notificationsRepository.findOne({
+        where: { id },
+      });
+
+      if (!Notification)
+        throw new BadRequestException(
+          `Notification with ID ${id} doesn't exist!`,
+        );
+
+      await this.notificationsRepository.delete(id);
+      return Notification;
+    } catch (error) {
+      if (error instanceof BadRequestException) {
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      } else {
+        throw new HttpException(
+          'Unexpected Error!',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
+  }
+
   create(createNotificationDto: CreateNotificationDto) {
     return 'This action adds a new notification';
   }
@@ -69,6 +123,4 @@ export class NotificationsService {
   remove(id: number) {
     return `This action removes a #${id} notification`;
   }
-
-  
 }

@@ -2,13 +2,14 @@ import {
   IsNumber,
   IsString,
   IsOptional,
-  IsDateString,
-  isNumber,
 } from 'class-validator';
 
 export class BorrowRequestDto {
   @IsNumber()
-  id: number;
+  userId: number;
+
+  @IsNumber()
+  bookId: number;
 
   @IsNumber()
   numberOfDays: number;

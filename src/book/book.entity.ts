@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Borrow } from './borrow.entity';
 
 @Entity()
 export class Book {
@@ -26,16 +27,12 @@ export class Book {
   @Column({ nullable: true })
   availableCopies: number;
 
-  @Column({ default: 'available' })
-  borrowingStatus: 'available' | 'pending' | 'borrowed';
-  // borrowed is equavilent to approved
-
-  @Column({ type: 'timestamp', nullable: true })
-  borrowedUntil: Date | null;
+  @OneToMany(() => Borrow, borrow => borrow.book)
+  borrows: Borrow[];
 
   @Column()
   createdAt: Date;
 
-  @Column({ type: 'timestamp'})
+  @Column({ type: 'timestamp' })
   updatedAt: Date;
 }

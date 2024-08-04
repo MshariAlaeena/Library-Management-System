@@ -1,4 +1,9 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './user.entity';
@@ -19,12 +24,12 @@ export class UserService {
     try {
       const user = await this.usersRepository.findOne({ where: { id } });
 
-      if(!user) {
+      if (!user) {
         throw new BadRequestException(`User with ID ${id} doesn't exists`);
       }
       return user;
     } catch (error) {
-      if(error instanceof BadRequestException)
+      if (error instanceof BadRequestException)
         throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
