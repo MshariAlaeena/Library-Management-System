@@ -14,7 +14,9 @@ describe('JwtAuthGuard', () => {
         {
           provide: JwtService,
           useValue: {
-            verifyAsync: jest.fn().mockResolvedValue({ id: 1, username: 'john', role: 'admin' }),
+            verifyAsync: jest
+              .fn()
+              .mockResolvedValue({ id: 1, username: 'john', role: 'admin' }),
           },
         },
       ],
@@ -51,11 +53,15 @@ describe('JwtAuthGuard', () => {
       }),
     } as unknown as ExecutionContext;
 
-    await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 
   it('should throw UnauthorizedException for invalid token', async () => {
-    jwtService.verifyAsync = jest.fn().mockRejectedValue(new Error('Invalid token'));
+    jwtService.verifyAsync = jest
+      .fn()
+      .mockRejectedValue(new Error('Invalid token'));
 
     const context = {
       switchToHttp: () => ({
@@ -67,6 +73,8 @@ describe('JwtAuthGuard', () => {
       }),
     } as unknown as ExecutionContext;
 
-    await expect(guard.canActivate(context)).rejects.toThrow(UnauthorizedException);
+    await expect(guard.canActivate(context)).rejects.toThrow(
+      UnauthorizedException,
+    );
   });
 });
