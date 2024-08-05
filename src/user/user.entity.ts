@@ -1,5 +1,6 @@
 import { Borrow } from 'src/book/borrow.entity';
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Notification } from 'src/notifications/notification.entity';
 
 @Entity()
 export class User {
@@ -17,6 +18,9 @@ export class User {
 
   @OneToMany(() => Borrow, borrow => borrow.book)
   borrows: Borrow[];
+
+  @OneToMany(() => Notification, notification => notification.user)
+  notifications: Notification[];
 
   @Column({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;

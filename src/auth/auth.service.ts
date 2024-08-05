@@ -10,24 +10,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // async signIn(username: string, password:string): Promise<{ accessToken: string }> {
-  //     const user = await this.userService.findUser(username);
-
-  //     if (!user) {
-  //         throw new UnauthorizedException('Invalid credentials');
-  //     }
-
-  //     const isMatch = await bcrypt.compare(password, user.password);
-
-  //     if(!isMatch) {
-  //         throw new UnauthorizedException('Invalid credentials');
-  //     }
-
-  //     const payload = { id: user.id, username: user.username, role: user.role};
-
-  //     return { accessToken: await this.jwtService.signAsync(payload) };
-  // }
-
   async signIn(
     username: string,
     password: string,
