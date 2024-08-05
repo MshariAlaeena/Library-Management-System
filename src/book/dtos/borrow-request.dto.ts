@@ -1,11 +1,18 @@
-import { IsNumber, IsString, IsOptional, IsDateString, isNumber } from 'class-validator';
+import {
+  IsNumber,
+  IsString,
+  IsOptional,
+} from 'class-validator';
 
 export class BorrowRequestDto {
+  @IsNumber()
+  userId: number;
+
   @IsNumber()
   bookId: number;
 
   @IsNumber()
-  numberOfDays: number; 
+  numberOfDays: number;
 
   @IsOptional()
   @IsString()

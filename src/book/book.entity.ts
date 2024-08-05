@@ -1,35 +1,38 @@
-import {Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn } from 'typeorm';
+import { Borrow } from './borrow.entity';
 
 @Entity()
 export class Book {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    title: string;
+  @Column({ unique: true, nullable: false })
+  title: string;
 
-    @Column({ nullable: true })
-    photoUrl: string;
+  @Column({ nullable: true })
+  photoUrl: string;
 
-    @Column({ nullable: true })
-    author: string;
+  @Column({ nullable: true })
+  author: string;
 
-    @Column()
-    publishedDate: Date;
+  @Column()
+  publishedDate: Date;
 
-    @Column({ nullable: true })
-    isbn: number;
+  @Column({ nullable: true })
+  isbn: number;
 
-    @Column({ nullable: true })
-    summary: string;
+  @Column({ nullable: true })
+  summary: string;
 
-    @Column({ nullable: true })
-    availableCopies: number;
+  @Column({ nullable: true })
+  availableCopies: number;
 
-    @Column({ default: 'available' })
-    borrowingStatus: 'available' | 'pending' | 'borrowed';
-    // borrowed is equavilent to approved
+  @OneToMany(() => Borrow, borrow => borrow.book)
+  borrows: Borrow[];
 
-    @Column({ type: 'timestamp', nullable: true })
-    borrowedUntil: Date | null;
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  createdAt: Date;
+
+  @Column({ type: 'timestamp', nullable: true })
+  updatedAt: Date;
 }
