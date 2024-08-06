@@ -187,4 +187,3 @@ export class BookService {
     await this.borrowRepository.save(borrowReq);
     return borrowReq.book;
   }
-}
