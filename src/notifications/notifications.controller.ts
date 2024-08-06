@@ -24,9 +24,19 @@ export class NotificationsController {
   @Post()
   @UsePipes(new ValidationPipe({ transform: true }))
   create(@Body() createNotificationDto: CreateNotificationDto) {
+    try {
       return this.notificationsService.createNotification(
-        createNotificationDto,
-      );
+      createNotificationDto,
+    );
+    } catch (error) {
+      if (error instanceof BadRequestException)
+        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      else
+        throw new HttpException(
+          `Unexpected Error while creating Notification`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+    }   
   }
 
   // gets all notifications

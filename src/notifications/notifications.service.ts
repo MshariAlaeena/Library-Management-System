@@ -22,7 +22,6 @@ export class NotificationsService {
   async createNotification(
     createNotificationDto: CreateNotificationDto,
   ): Promise<Notification> {
-    try {
       const Notification = await this.notificationsRepository.findOne({
         where: { content: createNotificationDto.content, category: createNotificationDto.category },
       });
@@ -38,15 +37,6 @@ export class NotificationsService {
       );
       this.notificationsRepository.save(newNotification);
       return newNotification;
-    } catch (error) {
-      if (error instanceof BadRequestException)
-        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-      else
-        throw new HttpException(
-          `Unexpected Error while creating Notification`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-    }
   }
 
   async getAllNotifications(): Promise<Notification[]> {
@@ -58,7 +48,6 @@ export class NotificationsService {
   }
 
   async markAsRead(id: number): Promise<Notification> {
-    try {
       const notification = await this.notificationsRepository.findOne({
         where: { id },
       });
@@ -70,16 +59,9 @@ export class NotificationsService {
 
       notification.isRead = true;
       return await this.notificationsRepository.save(notification);
-    } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-      } else {
-      }
-    }
   }
 
   async deleteNotifications(id: number): Promise<Notification> {
-    try {
       const Notification = await this.notificationsRepository.findOne({
         where: { id },
       });
@@ -91,16 +73,6 @@ export class NotificationsService {
 
       await this.notificationsRepository.delete(id);
       return Notification;
-    } catch (error) {
-      if (error instanceof BadRequestException) {
-        throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
-      } else {
-        throw new HttpException(
-          'Unexpected Error!',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
-      }
-    }
   }
 
   create(createNotificationDto: CreateNotificationDto) {
