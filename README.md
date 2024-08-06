@@ -14,6 +14,7 @@ This is a Library Management System built using NestJS, a progressive Node.js fr
 
 - User Authentication (Sign In)
 - Book Management (CRUD operations)
+- Notifications for users
 - Modular and scalable architecture
 
 ## Installation
@@ -286,5 +287,75 @@ The API server will start on `http://localhost:3000`. You can use tools like Pos
   ```json
   {
     "id": "number"
+  }
+  ```
+
+- **Create a Notification**
+
+  ```http
+  POST /notifications/
+  ```
+
+  **Request Body:**
+
+  ```json
+  {
+   "userId": "number",
+   "category": "string",
+   "content": "string",
+  }
+  ```
+
+  **Response:**
+
+  ```json
+  {
+    "empty (currently)"
+  }
+  ```
+
+- **Get All Notifications**
+
+  ```http
+  GET /notifications/
+  ```
+
+  **Response:**
+
+  ```json
+  {
+    "id": "number",
+    "userId": "number",
+    "category": "string",
+    "content": "string",
+    "isRead": "boolean",
+    "createdAt": "string"
+  }
+  ```
+
+- **Get a User Notifications By User id**
+
+  ```http
+  GET /notifications/:id
+  ```
+
+  **Request Body:**
+
+  ```json
+  {
+   "id": "number"
+  }
+  ```
+
+  **Response:**
+
+  ```json
+  {
+     "id": "number",
+    "userId": "number",
+    "category": "string",
+    "content": "string",
+    "isRead": "boolean",
+    "createdAt": "string"
   }
   ```

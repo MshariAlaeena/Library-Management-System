@@ -10,24 +10,6 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  // async signIn(username: string, password:string): Promise<{ accessToken: string }> {
-  //     const user = await this.userService.findUser(username);
-
-  //     if (!user) {
-  //         throw new UnauthorizedException('Invalid credentials');
-  //     }
-
-  //     const isMatch = await bcrypt.compare(password, user.password);
-
-  //     if(!isMatch) {
-  //         throw new UnauthorizedException('Invalid credentials');
-  //     }
-
-  //     const payload = { id: user.id, username: user.username, role: user.role};
-
-  //     return { accessToken: await this.jwtService.signAsync(payload) };
-  // }
-
   async signIn(
     username: string,
     password: string,
@@ -50,7 +32,9 @@ export class AuthService {
 
     const payload = { id: user.id, username: user.username, role: user.role };
     const token = await this.jwtService.signAsync(payload);
-    const expiry = 3600; //3600 second (1h, really ? yes)
+
+    const expiry = 3600; //3600 second is 1h, really ? yes
+
 
     return { token, expiry };
   }
