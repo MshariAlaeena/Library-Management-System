@@ -18,9 +18,9 @@ export class UserService {
 
   async findUser(username: string): Promise<User | undefined> {
     return this.usersRepository.findOne({ where: { username } });
-  }
+  } 
 
-  async findUserById(id: number): Promise<User | undefined> {
+  async findUserById(id: string): Promise<User | undefined> {
     try {
       const user = await this.usersRepository.findOne({ where: { id } });
 

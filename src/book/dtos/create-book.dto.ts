@@ -9,5 +9,5 @@ export class CreateBookDto {
     {},
     { message: 'Published date must be a valid ISO 8601 date string' },
   )
-  publishedDate: string;
+  publishedDate: Date;
 }

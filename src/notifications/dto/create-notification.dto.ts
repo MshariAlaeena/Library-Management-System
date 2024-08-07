@@ -2,7 +2,7 @@ import { IsString, IsNumber, IsOptional } from 'class-validator';
 
 export class CreateNotificationDto {
   @IsNumber()
-  userId: number;
+  userId: string;
 
   @IsString()
   category: string;

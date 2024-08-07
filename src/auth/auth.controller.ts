@@ -10,7 +10,7 @@ export class AuthController {
   @Post('auth/signIn')
   async signIn(
     @Body() signInDto: SignInDto,
-  ): Promise<{ token: string; expiry: number }> {
+  ): Promise<{ token: string; expiry: Date }> {
     const { token, expiry } = await this.authService.signIn(
       signInDto.username,
       signInDto.password,

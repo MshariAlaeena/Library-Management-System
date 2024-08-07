@@ -1,13 +1,13 @@
 import { Borrow } from 'src/book/borrow.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Notification } from 'src/notifications/notification.entity';
 
-@Entity()
+@Entity({ name: 'users' })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column({ length: 40, unique: true})
   username: string;
 
   @Column()
@@ -22,9 +22,9 @@ export class User {
   @OneToMany(() => Notification, notification => notification.user)
   notifications: Notification[];
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'timestamp' , nullable: true})
+  @UpdateDateColumn({ type: 'timestamp', nullable: true })
   updatedAt: Date;
 }

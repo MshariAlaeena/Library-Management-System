@@ -1,7 +1,5 @@
 import {
   BadRequestException,
-  HttpException,
-  HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -10,7 +8,6 @@ import { UpdateNotificationDto } from './dto/update-notification.dto';
 import { Notification } from './notification.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Cron } from '@nestjs/schedule';
 
 @Injectable()
 export class NotificationsService {
@@ -43,11 +40,11 @@ export class NotificationsService {
     return await this.notificationsRepository.find();
   }
 
-  async getUserNotifications(userId: number): Promise<Notification[]> {
+  async getUserNotifications(userId: string): Promise<Notification[]> {
     return await this.notificationsRepository.find({ where: { user: { id: userId }}});
   }
 
-  async markAsRead(id: number): Promise<Notification> {
+  async markAsRead(id: string): Promise<Notification> {
       const notification = await this.notificationsRepository.findOne({
         where: { id },
       });
@@ -61,7 +58,7 @@ export class NotificationsService {
       return await this.notificationsRepository.save(notification);
   }
 
-  async deleteNotifications(id: number): Promise<Notification> {
+  async deleteNotifications(id: string): Promise<Notification> {
       const Notification = await this.notificationsRepository.findOne({
         where: { id },
       });

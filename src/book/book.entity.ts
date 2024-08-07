@@ -1,12 +1,13 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Borrow } from './borrow.entity';
+import { IsPositive } from 'class-validator';
 
-@Entity()
+@Entity({ name: 'books' })
 export class Book {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ unique: true, nullable: false })
+  @Column({ unique: true, nullable: false, length: 50 })
   title: string;
 
   @Column({ nullable: true })
@@ -19,7 +20,7 @@ export class Book {
   publishedDate: Date;
 
   @Column({ nullable: true })
-  isbn: number;
+  isbn: string;
 
   @Column({ nullable: true })
   summary: string;
@@ -33,6 +34,6 @@ export class Book {
   @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @UpdateDateColumn({ type: 'timestamp', nullable: true })
   updatedAt: Date;
 }

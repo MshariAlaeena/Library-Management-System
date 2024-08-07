@@ -2,6 +2,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  ConflictException,
 } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -9,7 +10,6 @@ import { Book } from './book.entity';
 import { CreateBookDto } from './dtos/create-book.dto';
 import { BorrowRequestDto } from './dtos/borrow-request.dto';
 import { UpdateBookDto } from './dtos/update-book.dto';
-import { CreateNotificationDto } from 'src/notifications/dto/create-notification.dto';
 import { NotificationsService } from 'src/notifications/notifications.service';
 import { Borrow } from './borrow.entity';
 
@@ -48,7 +48,7 @@ export class BookService {
     });
 
     if (existingBook)
-      throw new BadRequestException(
+      throw new ConflictException(
         `Book with Title ${createBookDto.title} Exists!`,
       );
 
@@ -92,7 +92,7 @@ export class BookService {
     const borrowReq = await this.borrowRepository.find({ where: { book: { id }, status: 'approved' }});
 
     if (borrowReq.length > 0)
-      throw new BadRequestException(`Book with ID ${id} is currently borrowed and unavailable`);
+      throw new ConflictException(`Book with ID ${id} is currently borrowed and unavailable`);
 
     const currentDate = new Date();
     const returnDate = new Date(
@@ -127,7 +127,7 @@ export class BookService {
     // If there are no other active borrow requests, update the book's status to available
     if (activeBorrows.length === 0) {
       book.availableCopies += 1; 
-      await this.booksRepository.save(book);
+      await this.booksRepository.save(book);  //TODO increment
     }
   }
   
@@ -139,7 +139,7 @@ export class BookService {
       throw new NotFoundException(`No pending borrow request found for book with ID ${id}`);
     }
     if (borrowReq.status !== 'pending') {
-      throw new BadRequestException(
+      throw new ConflictException(
         `Book with ID ${borrowReq.book.id} is not being Requested for borrowing`,
       );
     }
@@ -153,7 +153,7 @@ export class BookService {
   }
 
 
-  scheduleReminder(userId: number, bookId: number, dueDate: Date) {
+  scheduleReminder(userId: string, bookId: number, dueDate: Date) {
     const twoDaysBefore = new Date(dueDate.getTime() - 2 * 24 * 60 * 60 * 1000);
     const now = new Date();
     
@@ -179,7 +179,7 @@ export class BookService {
       throw new NotFoundException(`No pending borrow request found for book with ID ${id}`);
     }
     if (borrowReq.status !== 'pending') {
-      throw new BadRequestException(
+      throw new ConflictException(
         `Book with ID ${borrowReq.book.id} is not being Requested for borrowing`,
       );
     }
@@ -187,3 +187,4 @@ export class BookService {
     await this.borrowRepository.save(borrowReq);
     return borrowReq.book;
   }
+}

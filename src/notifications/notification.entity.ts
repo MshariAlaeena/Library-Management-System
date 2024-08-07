@@ -7,13 +7,13 @@ import {
 } from 'typeorm';
 import { User } from 'src/user/user.entity';
 
-@Entity()
+@Entity({ name: 'notifications' })
 export class Notification {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
-  userId: number;
+  userId: string;
 
   @Column()
   category: string;
