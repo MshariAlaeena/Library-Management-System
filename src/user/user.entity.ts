@@ -7,13 +7,13 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ length: 40, unique: true})
+  @Column({ length: 40, unique: true, name: "username"})
   username: string;
 
-  @Column()
+  @Column({ name: "password" })
   password: string;
 
-  @Column({ default: 'user' })
+  @Column({ default: 'user', name: "role" })
   role: string;
 
   @OneToMany(() => Borrow, borrow => borrow.book)
@@ -22,9 +22,9 @@ export class User {
   @OneToMany(() => Notification, notification => notification.user)
   notifications: Notification[];
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP', name: "created_at" })
   createdAt: Date;
 
-  @UpdateDateColumn({ type: 'timestamp', nullable: true })
+  @UpdateDateColumn({ type: 'timestamp', nullable: true, name: "updated_at" })
   updatedAt: Date;
 }

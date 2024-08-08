@@ -12,21 +12,21 @@ export class Notification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ name: "user_id"})
   userId: string;
 
-  @Column()
+  @Column({ name: "category" })
   category: string;
 
-  @Column()
+  @Column({ name: "content" })
   content: string;
 
-  @Column({ default: false })
+  @Column({ default: false, name: "is_read"})
   isRead: boolean;
 
   @ManyToOne(() => User, user => user.notifications)
   user: User;
 
-  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP', name: "created_at" })
   createdAt: Date;
 }
