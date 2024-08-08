@@ -1,19 +1,19 @@
 import { Borrow } from 'src/book/borrow.entity';
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 import { Notification } from 'src/notifications/notification.entity';
 
-@Entity()
+@Entity({ name: 'users' })
 export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-  @Column()
+  @Column({ length: 40, unique: true, name: "username"})
   username: string;
 
-  @Column()
+  @Column({ name: "password" })
   password: string;
 
-  @Column({ default: 'user' })
+  @Column({ default: 'user', name: "role" })
   role: string;
 
   @OneToMany(() => Borrow, borrow => borrow.book)
@@ -22,9 +22,9 @@ export class User {
   @OneToMany(() => Notification, notification => notification.user)
   notifications: Notification[];
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @CreateDateColumn({ default: () => 'CURRENT_TIMESTAMP', name: "created_at" })
   createdAt: Date;
 
-  @Column({ type: 'timestamp' , nullable: true})
+  @UpdateDateColumn({ type: 'timestamp', nullable: true, name: "updated_at" })
   updatedAt: Date;
 }

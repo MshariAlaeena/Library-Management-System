@@ -47,7 +47,7 @@ export class NotificationsController {
 
   // gets the notifications of a user by user's id
   @Get(':id')
-  findOne(@Param('id') id: number) {
+  findOne(@Param('id') id: string) {
     return this.notificationsService.getUserNotifications(id);
   }
 

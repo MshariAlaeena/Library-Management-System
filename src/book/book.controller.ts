@@ -13,6 +13,7 @@ import {
   BadRequestException,
   NotFoundException,
   UsePipes,
+  ConflictException,
 } from '@nestjs/common';
 import { RolesGuard } from '../roles/roles.guard';
 import { Roles } from '../roles/roles.decorator';
@@ -66,10 +67,10 @@ export class BookController {
         publishedDate: new Date(newBook.publishedDate).toISOString(),
       };
     } catch (error) {
-      if (error instanceof BadRequestException)
+      if (error instanceof ConflictException)
         throw new HttpException(
           `Book with Title ${createBookDto.title} Exists!`,
-          HttpStatus.BAD_REQUEST,
+          HttpStatus.CONFLICT,
         );
       else {
         console.error(
@@ -129,8 +130,27 @@ export class BookController {
     @Param('id') id: number,
     @Body() borrowRequestDto: BorrowRequestDto,
   ): Promise<{ requestedId: number }> {
-    const requestedId = await this.BookService.borrowBook(id, borrowRequestDto);
-    return { requestedId };
+    try {
+      const requestedId = await this.BookService.borrowBook(id, borrowRequestDto);
+      return { requestedId };
+    } catch (error) {
+      if (error instanceof NotFoundException) {
+        throw new HttpException(
+          error.message,
+          HttpStatus.NOT_FOUND,
+        );
+      } else if (error instanceof ConflictException) {
+        throw new HttpException(
+          error.message,
+          HttpStatus.CONFLICT,
+        );
+      } else {
+        throw new HttpException(
+          `Unexpected error happened`,
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
+    }
   }
 
   @Post('return/:id')
@@ -158,10 +178,10 @@ export class BookController {
           `Book with ID ${requestedId} is not being Requested for borrowing`,
           HttpStatus.BAD_REQUEST,
         );
-      else if (error instanceof NotFoundException)
+      else if (error instanceof ConflictException)
         throw new HttpException(
           `Book with ID ${requestedId} is not Found`,
-          HttpStatus.NOT_FOUND,
+        HttpStatus.CONFLICT,
         );
     }
   }
@@ -173,10 +193,10 @@ export class BookController {
       await this.BookService.rejectBorrowing(id);
       return { id };
     } catch (error) {
-      if (error instanceof BadRequestException)
+      if (error instanceof ConflictException)
         throw new HttpException(
           `Book with ID ${id} is not being Requested for borrowing`,
-          HttpStatus.BAD_REQUEST,
+          HttpStatus.CONFLICT,
         );
       else if (error instanceof NotFoundException)
         throw new HttpException(

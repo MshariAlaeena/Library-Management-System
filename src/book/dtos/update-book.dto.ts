@@ -1,6 +1,5 @@
 import {
   IsString,
-  IsDateString,
   IsNumber,
   IsOptional,
   IsDate,
@@ -27,7 +26,7 @@ export class UpdateBookDto {
 
   @IsNumber()
   @IsOptional()
-  isbn?: number;
+  isbn?: string;
 
   @IsString()
   @IsOptional()
@@ -36,13 +35,4 @@ export class UpdateBookDto {
   @IsString()
   @IsOptional()
   availableCopies?: number;
-
-  @IsString()
-  @IsOptional()
-  borrowingStatus?: 'available' | 'pending' | 'borrowed';
-  // borrowed is equavilent to approved
-
-  @IsDate()
-  @IsOptional()
-  borrowedUntil?: Date | null;
 }

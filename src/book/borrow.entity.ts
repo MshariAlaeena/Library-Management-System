@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { User } from '../user/user.entity';
 import { Book } from '../book/book.entity';
 
-@Entity()
+@Entity({ name: 'borrows' })
 export class Borrow {
   @PrimaryGeneratedColumn()
   id: number;
@@ -12,6 +12,9 @@ export class Borrow {
 
   @ManyToOne(() => Book, book => book.borrows)
   book: Book;
+
+  @Column()
+  userId: string;
 
   @Column()
   borrowDate: Date;

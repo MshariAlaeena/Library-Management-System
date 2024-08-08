@@ -13,7 +13,7 @@ export class AuthService {
   async signIn(
     username: string,
     password: string,
-  ): Promise<{ token: string; expiry: number }> {
+  ): Promise<{ token: string; expiry: Date }> {
     const user = await this.userService.findUser(username);
     console.log('Found user:', user);
 
@@ -33,18 +33,15 @@ export class AuthService {
     const payload = { id: user.id, username: user.username, role: user.role };
     const token = await this.jwtService.signAsync(payload);
 
-    const expiry = 3600; //3600 second is 1h, really ? yes
+    const expiry = new Date(); // Current date and time
+    expiry.setHours(expiry.getHours() + 1); // Add one hour to the current date and time
 
 
     return { token, expiry };
   }
 
-  async signup(
-    username: string = 'john',
-    password: string = 'test',
-    role: string = 'arole',
-  ) {
-    const john = await this.userService.createUser('john', 'changeme', 'admin');
-    const joe = await this.userService.createUser('joe', 'changeme', 'user');
+  async signup() {
+    const john = await this.userService.createUser('Mshari', 'changeme', 'admin');
+    const joe = await this.userService.createUser('notMshari', 'changeme', 'user');
   }
 }
